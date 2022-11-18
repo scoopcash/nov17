@@ -50,4 +50,39 @@ where customer_id in
 
 select count(*) from payment;
 
+select customer_id, first_name, last_name from customer 
+where customer_id in
+	(
+	select customer_id
+	from payment
+	);
+
+#view
+
+create view total_sales as 
+SELECT s.store_id, SUM(amount) AS Gross
+FROM payment AS p
+  JOIN rental AS r
+  ON (p.rental_id = r.rental_id)
+    JOIN inventory AS i
+    ON (i.inventory_id = r.inventory_id)
+      JOIN store AS s
+      ON (s.store_id = i.store_id)
+      GROUP BY s.store_id;
+	  
+	 
+select * from total_sales;
+
+
+create view customer_data as 
+select c.first_name, c.last_name, count(payment_id), sum(amount)
+from payment p 
+	join customer c
+	on (p.customer_id = c.customer_id)
+	group by c.customer_id
+	
+select * from customer_data;
+
+
+
 
