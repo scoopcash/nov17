@@ -85,4 +85,32 @@ select * from customer_data;
 
 
 
+create view customer_data as 
+select c.first_name, c.last_name, count(payment_id), sum(amount)
+from payment p 
+	join customer c
+	on (p.customer_id = c.customer_id)
+	group by first_name, last_name
+	order by sum(amount) desc;
+	
+select * from customer_data;
+
+select *
+from customer_data
+where first_name = 'THERESA'
+AND last_name = 'WATSON';
+
+create view staff_sales as
+select staff_id, cast(payment_date as DATE), count(payment_id), sum(amount)
+from payment 
+where staff_id in
+	(
+	select staff_id from staff
+	where first_name = 'Mike'
+	AND last_name = 'Hillyer'
+	)
+group by staff_id, cast(payment_date as DATE);
+
+select * from staff_sales
+
 
